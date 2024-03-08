@@ -12,7 +12,11 @@ public class Subject {
         private int subid;
     private String subname;
     private int credit;
+    private Semester semester;
 
+    public Subject() {
+    }
+    
     public int getSubid() {
         return subid;
     }
@@ -35,6 +39,14 @@ public class Subject {
 
     public void setCredit(int credit) {
         this.credit = credit;
+    }
+
+    public Semester getSemester() {
+        return semester;
+    }
+
+    public void setSemester(Semester semester) {
+        this.semester = semester;
     }
     
 }
