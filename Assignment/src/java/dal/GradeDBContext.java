@@ -137,14 +137,15 @@ public class GradeDBContext extends DBContext<Grade> {
     public static void main(String[] args) {
         GradeDBContext gdb = new GradeDBContext();
         ArrayList<AssessmentType> g = gdb.getAssessmentTypeBySubID(1);
-        AssessmentType temp = g.get(0);
+        AssessmentType temp = g.get(4);
         ArrayList<Grade> gr = gdb.getGradeBySubidAndSidAndAtid(1, 1, temp.getAtid());
         temp.setGrades(gr);
         System.out.println(temp.getAtid() + " "+ temp.getAtname());
         System.out.println(gr.get(0).getScore());
         System.out.println(gr.get(0).getExam().getAssessment().getItem());;
-        System.out.println("1: "+ temp.getGrades().get(0).getScore());
-        System.out.println("2: "+ temp.getGrades().get(0).getExam().getAssessment().getItem());
+//        System.out.println("1: "+ temp.getGrades().get(0).getScore());
+//        System.out.println("2: "+ temp.getGrades().get(0).getExam().getAssessment().getItem());
+        System.out.println(temp.getGrades().size());
 
     }
 

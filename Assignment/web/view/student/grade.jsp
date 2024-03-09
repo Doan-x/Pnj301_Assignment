@@ -89,20 +89,10 @@
                         <c:set var="grades" value="${requestScope.ass}"/>
                         <c:if test="${(ass != null && ass.size()>0)}">
                             <td valign="top">
-                                <table border = "1px">
-                                    <tr><td>Grade category</td></tr>
-                                    <c:forEach items="${requestScope.ass}" var="a">
-                                        <tr>
-                                            <td>${a.atname}</td>
-                                        </tr>
-                                        <tr><td></td></tr>
-                                    </c:forEach>
-                                </table>
-                            </td>
-                            <td valign="top">
-                                <table border = "1px">
+                                <table border = "1px">                                    
                                     <thead>
                                         <tr>
+                                            <td>Grade category</td>
                                             <th>Grade item</th>
                                             <th>Weight</th>
                                             <th>Value</th>
@@ -111,9 +101,12 @@
                                     </thead>
                                     <tbody>
                                         <c:forEach items="${requestScope.ass}" var="a">
+                                            <tr>
+                                                <td rowspan="${a.grades.size()+2}">${a.atname}</td>
+                                            </tr>
                                                                                     
                                                 <c:forEach items="${a.grades}" var="g">
-                                                    <tr>
+                                                    <tr>                                                    
                                                     <td>${g.exam.assessment.item}</td>
                                                     <td>${g.exam.assessment.weight}%</td>
                                                     <td>${g.score}</td>
@@ -122,10 +115,11 @@
                                                 </c:forEach>
                                             
                                             <tr><td>Total</td>
-                                                <td>${(g.exam.assessment.weight*a.grades.size())} %</td>
+                                                <td>${((g.exam.assessment.weight)*(a.grades.size()))} %</td>
                                                 <td></td>
                                                 <td></td>
                                             </tr>
+                                            
                                         </c:forEach>
                                     </tbody>
                                 </table>
