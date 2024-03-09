@@ -10,6 +10,7 @@ import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Assessment;
+import model.AssessmentType;
 import model.Exam;
 import model.Semester;
 import model.Student;
@@ -25,7 +26,7 @@ public class GradeDBContext extends DBContext<Grade> {
         ArrayList<Grade> list = new ArrayList<>();
         try {
             String sql = "select  sub.subid, sub.suname, sub.semid, sub.credit,\n"
-                    + "		a.weight, a.name,\n"
+                    + "		a.item, a.weight,\n"
                     + "		e.DateBegin, e.DateEnd,\n"
                     + "		g.score,\n"
                     + "		s.sid, s.sname\n"
@@ -39,42 +40,112 @@ public class GradeDBContext extends DBContext<Grade> {
             stm.setInt(1, sid);
             stm.setInt(2, subid);
             ResultSet rs = stm.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 Grade g = new Grade();
                 Assessment ass = new Assessment();
                 Exam e = new Exam();
                 Subject sub = new Subject();
                 Student st = new Student();
-                
-                g.setScore(rs.getFloat("score")); 
-                
+
+                g.setScore(rs.getFloat("score"));
+
                 st.setSid(sid);
                 st.setSname(rs.getString("sname"));
-                g.setStudent(st);                
-                            
+                g.setStudent(st);
+
                 sub.setSubid(subid);
                 sub.setSubname(rs.getString("suname"));
                 sub.setCredit(rs.getInt("credit"));
                 Semester sem = new Semester();
                 sem.setId(rs.getInt("semid"));
                 sub.setSemester(sem);
-                
-                ass.setSubject(sub);                
-                ass.setName(rs.getString("name"));
+
+                ass.setSubject(sub);
                 ass.setWeight(rs.getFloat("weight"));
-                
+                ass.setItem(rs.getString("item"));
+
                 e.setDateBegin(rs.getTimestamp("DateBegin"));
-                e.setDateEnd(rs.getTimestamp("DateEnd"));  
+                e.setDateEnd(rs.getTimestamp("DateEnd"));
                 e.setAssessment(ass);
                 g.setExam(e);
-                
+
                 list.add(g);
-                                
+
             }
         } catch (SQLException ex) {
             Logger.getLogger(GradeDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return list;        
+        return list;
+    }
+
+    public ArrayList<AssessmentType> getAssessmentTypeBySubID(int subid) {
+        ArrayList<AssessmentType> list = new ArrayList<>();
+        try {
+            String sql = "select at.atid, at.atname\n"
+                    + "from Subject sub \n"
+                    + "	inner join AssessmentType at on at.subid = sub.subid\n"
+                    + "where sub.subid =?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, subid);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                AssessmentType at = new AssessmentType();
+                at.setAtid(rs.getInt("atid"));
+                at.setAtname(rs.getString("atname"));
+                list.add(at);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(GradeDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public ArrayList<Grade> getGradeBySubidAndSidAndAtid(int subid, int sid, int atid) {
+        ArrayList<Grade> l = new ArrayList<>();
+        try {
+            String sql = "select a.item, a.weight, g.score\n"
+                    + "from Subject sub\n"
+                    + "	inner join AssessmentType at on at.subid = sub.subid\n"
+                    + "	inner join Assessment a  on a.atid = at.atid\n"
+                    + "	inner join Exam e on e.assid = a.assid\n"
+                    + "	inner join Grade g on g.eid = e.eid\n"
+                    + "	inner join Student s on s.sid =g.sid\n"
+                    + "where sub.subid = ? and s.sid = ? and at.atid = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, subid);
+            stm.setInt(2, sid);
+            stm.setInt(3, atid);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Grade g = new Grade();
+                Assessment ass = new Assessment();
+                Exam e = new Exam();
+                
+                g.setScore(rs.getFloat("score"));
+                ass.setItem(rs.getString("item"));
+                ass.setWeight(rs.getFloat("weight"));
+                e.setAssessment(ass);
+                g.setExam(e);
+                l.add(g);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(GradeDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return l;
+    }
+
+    public static void main(String[] args) {
+        GradeDBContext gdb = new GradeDBContext();
+        ArrayList<AssessmentType> g = gdb.getAssessmentTypeBySubID(1);
+        AssessmentType temp = g.get(0);
+        ArrayList<Grade> gr = gdb.getGradeBySubidAndSidAndAtid(1, 1, temp.getAtid());
+        temp.setGrades(gr);
+        System.out.println(temp.getAtid() + " "+ temp.getAtname());
+        System.out.println(gr.get(0).getScore());
+        System.out.println(gr.get(0).getExam().getAssessment().getItem());;
+        System.out.println("1: "+ temp.getGrades().get(0).getScore());
+        System.out.println("2: "+ temp.getGrades().get(0).getExam().getAssessment().getItem());
+
     }
 
     @Override

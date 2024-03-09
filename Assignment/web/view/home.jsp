@@ -16,7 +16,7 @@
         <h1>Hello ${sessionScope.user.displayname}</h1>
         <a href="login">logout</a>,<br/>
         <a href="lecturer/timetable">time</a>
-
+        <a href="student/grade?semid=4">time</a>
 
     </body>
 </html>

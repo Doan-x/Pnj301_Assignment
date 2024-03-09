@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import model.Account;
+import model.AssessmentType;
 import model.Grade;
 import model.Subject;
 
@@ -37,14 +38,26 @@ public class GradeController extends BaseRequiredAuthenticationController {
         SubjectDBContext subdb = new SubjectDBContext();
         ArrayList<Subject> subjects = subdb.getSubjectBySemID(semid);
         int subid;
-        String subid_raw = req.getParameter("subid");
+        String subid_raw = req.getParameter("subid");       
+        
+        
+        if (subid_raw == null || subid_raw=="") {
+            req.setAttribute("subjects", subjects);
+            req.getRequestDispatcher("../view/student/grade.jsp").forward(req, resp);
+        } else {
             subid = Integer.parseInt(subid_raw);
             GradeDBContext gdb = new GradeDBContext();
-            ArrayList<Grade> grades = gdb.getGradeBySidAndSubID(subid, 1);
-            req.setAttribute("grades", grades);
-
-        req.setAttribute("subjects", subjects);
-        req.getRequestDispatcher("../view/student/grade.jsp").forward(req, resp);
+            ArrayList<AssessmentType> ass = gdb.getAssessmentTypeBySubID(subid);
+            double mark=-1;
+            for (AssessmentType as : ass) {
+                ArrayList<Grade> gr = gdb.getGradeBySubidAndSidAndAtid(subid, 1, as.getAtid());                
+                as.setGrades(gr);
+            }
+            
+            req.setAttribute("ass", ass);
+            req.setAttribute("subjects", subjects);
+            req.getRequestDispatcher("../view/student/grade.jsp").forward(req, resp);
+        }
     }
 
 }

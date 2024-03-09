@@ -12,8 +12,15 @@ public class Assessment {
     private int id;
     private Subject subject;
     private float weight;
-    private String name;
+    private String item;
+    
+    public String getItem() {
+        return item;
+    }
 
+    public void setItem(String item) {
+        this.item = item;
+    }  
     public Assessment() {
     }
 
@@ -39,14 +46,5 @@ public class Assessment {
 
     public void setWeight(float weight) {
         this.weight = weight;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-    
+    }    
 }
