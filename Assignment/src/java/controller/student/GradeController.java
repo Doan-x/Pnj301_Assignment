@@ -17,8 +17,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import model.Account;
 import model.AssessmentType;
+import model.CourseraTotal;
 import model.Grade;
+import model.Semester;
 import model.Subject;
+import util.ManageCourseraTotal;
 
 /**
  *
@@ -36,6 +39,10 @@ public class GradeController extends BaseRequiredAuthenticationController {
         String semid_raw = req.getParameter("semid");
         int semid = Integer.parseInt(semid_raw);
         SubjectDBContext subdb = new SubjectDBContext();
+        
+        ArrayList<Semester> semesters = subdb.getSemester();
+        req.setAttribute("semesters", semesters);
+        
         ArrayList<Subject> subjects = subdb.getSubjectBySemID(semid);
         int subid;
         String subid_raw = req.getParameter("subid");       
@@ -44,16 +51,19 @@ public class GradeController extends BaseRequiredAuthenticationController {
         if (subid_raw == null || subid_raw=="") {
             req.setAttribute("subjects", subjects);
             req.getRequestDispatcher("../view/student/grade.jsp").forward(req, resp);
-        } else {
+        } else {            
             subid = Integer.parseInt(subid_raw);
             GradeDBContext gdb = new GradeDBContext();
             ArrayList<AssessmentType> ass = gdb.getAssessmentTypeBySubID(subid);
-            double mark=-1;
             for (AssessmentType as : ass) {
                 ArrayList<Grade> gr = gdb.getGradeBySubidAndSidAndAtid(subid, 1, as.getAtid());                
                 as.setGrades(gr);
             }
+            ArrayList<Grade> listgrade = gdb.getGradeBySidAndSubID(1, subid);
+            ManageCourseraTotal mct = new ManageCourseraTotal();
+            CourseraTotal courseratotal = mct.checkStatus(ass);
             
+            req.setAttribute("courseratotal", courseratotal);
             req.setAttribute("ass", ass);
             req.setAttribute("subjects", subjects);
             req.getRequestDispatcher("../view/student/grade.jsp").forward(req, resp);

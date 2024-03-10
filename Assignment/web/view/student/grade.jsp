@@ -55,10 +55,10 @@
                                             <div >
                                                 <table>
                                                     <tbody>
-                                                        <c:forEach items="${requestScope.subjects}" var="sub">
+                                                        <c:forEach items="${requestScope.semesters}" var="sem">
                                                             <tr>
                                                                 <td>
-                                                                    <a href="?semid=${sub.semester.id}&subid=${sub.subid}">${sub.subname}</a>  
+                                                                    <a href="?semid=${sem.id}">${sem.name}</a>  
                                                                 </td>
                                                             </tr>
                                                         </c:forEach>
@@ -103,25 +103,55 @@
                                         <c:forEach items="${requestScope.ass}" var="a">
                                             <tr>
                                                 <td rowspan="${a.grades.size()+2}">${a.atname}</td>
-                                            </tr>
-                                                                                    
-                                                <c:forEach items="${a.grades}" var="g">
-                                                    <tr>                                                    
+                                            </tr>                                 
+                                            <c:forEach items="${a.grades}" var="g">
+                                                <tr>                                                    
                                                     <td>${g.exam.assessment.item}</td>
                                                     <td>${g.exam.assessment.weight}%</td>
-                                                    <td>${g.score}</td>
+                                                    <c:if test="${!(g.score eq -1)}">
+                                                        <td>${g.score}</td>
+                                                    </c:if>
                                                     <td></td>
-                                                    </tr>
-                                                </c:forEach>
-                                            
+                                                </tr>
+                                            </c:forEach>
+
                                             <tr><td>Total</td>
-                                                <td>${((g.exam.assessment.weight)*(a.grades.size()))} %</td>
-                                                <td></td>
+
+                                                <td>${a.getWeightTotal()}%</td>
+                                                <c:if test="${a.getMarkTotal()  >= 0}">
+                                                    <td>${a.getMarkTotal()}</td>
+                                                </c:if>
                                                 <td></td>
                                             </tr>
-                                            
+
                                         </c:forEach>
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td rowspan="2">Course total</td>
+                                            <td>Average</td>
+                                            <c:if test="${requestScope.courseratotal.average >=0}">
+                                                <td colspan="3">${requestScope.courseratotal.average}</td>
+                                            </c:if>
+                                        </tr>
+                                        <tr>
+                                            <td>Status</td>
+                                            <td colspan="3">
+                                                
+                                                <c:if test="${requestScope.courseratotal.status == 1}">
+                                                    <font color="Green">Passed</font>
+                                                </c:if>
+                                                <c:if test="${requestScope.courseratotal.status == 0}">
+                                                    <font >Studying</font>
+                                                </c:if>
+                                                <c:if test="${requestScope.courseratotal.status == -1}">
+                                                    <font color="red">NotPassed</font>
+                                                </c:if>
+                                                    
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+
                                 </table>
                             </td>
                         </c:if>    

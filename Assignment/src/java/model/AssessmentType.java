@@ -11,10 +11,31 @@ import java.util.ArrayList;
  * @author Admin
  */
 public class AssessmentType {
+
     private int atid;
     private String atname;
     private Subject sub;
-    private ArrayList<Grade> grades ;
+    private ArrayList<Grade> grades;
+
+    public float getMarkTotal() {
+        float total = 0;
+        for (Grade g : grades) {
+            if (g.getScore() > 0) {
+                total += g.getScore();
+            } else {
+                return -1;
+            }
+        }
+        return total / grades.size();
+    }
+
+    public float getWeightTotal() {
+        int total = 0;
+        for (Grade g : grades) {
+            total+= g.getExam().getAssessment().getWeight();
+        }
+        return total;
+    }
 
     public ArrayList<Grade> getGrades() {
         return grades;
@@ -23,8 +44,6 @@ public class AssessmentType {
     public void setGrades(ArrayList<Grade> grades) {
         this.grades = grades;
     }
-
-
 
     public AssessmentType() {
     }
@@ -52,6 +71,5 @@ public class AssessmentType {
     public void setSub(Subject sub) {
         this.sub = sub;
     }
-    
-    
+
 }
