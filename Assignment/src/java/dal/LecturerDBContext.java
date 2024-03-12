@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  */
 public class LecturerDBContext extends DBContext<Lecturer> {
 
-    public Lecturer checkLid(int lid) {
+    public Lecturer getLecturerByLid(int lid) {
         try {
             String sql = "SELECT [lid]\n"
                     + "      ,[lname]\n"
