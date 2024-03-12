@@ -28,7 +28,7 @@
 
     </head>
     <body>
-        <h1>Activities for ${requestScope.account.username} (${requestScope.account.displayname})</h1>
+        <h1>Activities for ${requestScope.student.sid} (${requestScope.student.sname})</h1>
         <div>
             <strong>Note:</strong> These activities do not include extra-curriculum activities, such as club activities ...
             <strong>Chú thích:</strong> Các hoạt động trong bảng dưới không bao gồm hoạt động ngoại khóa, ví dụ như hoạt động câu lạc bộ ...</br> 
@@ -87,8 +87,8 @@
             </p>
             <div id="ctl00_mainContent_divfoot">
                 <ul>
-                    <li>(<font color="green">attended</font>): ${requestScope.account.username} had attended this activity / ${requestScope.account.displayname} đã tham gia hoạt động này</li>
-                    <li>(<font color="red">absent</font>): ${requestScope.account.username} had NOT attended this activity / ${requestScope.account.displayname} đã vắng mặt buổi này</li> 
+                    <li>(<font color="green">attended</font>): ${requestScope.student.sid} had attended this activity / ${requestScope.student.sname} đã tham gia hoạt động này</li>
+                    <li>(<font color="red">absent</font>): ${requestScope.student.sid} had NOT attended this activity / ${requestScope.student.sname}đã vắng mặt buổi này</li> 
                     <li>(-): no data was given / chưa có dữ liệu</li> 
                 </ul>
             </div>
