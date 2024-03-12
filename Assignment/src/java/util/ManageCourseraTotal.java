@@ -41,7 +41,7 @@ public class ManageCourseraTotal {
                 >= 0 && checkZeroMark(at)) {
             ct.setStatus(-1);
         } else if (avg >= 4 && avg
-                <= 10 && checkZeroMark(at)) {
+                <= 10 ) {
             ct.setStatus(1);
         }
         return ct;
