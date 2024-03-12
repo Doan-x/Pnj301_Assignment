@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  */
 public class StudentDBContext extends DBContext<Student> {
 
-    public Student checkSid(int sid) {
+    public Student getStudentBySid(int sid) {
         try {
             String sql = "SELECT [sid]\n"
                     + "      ,[sname]\n"
