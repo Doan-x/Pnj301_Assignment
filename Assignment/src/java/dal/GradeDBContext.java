@@ -174,16 +174,6 @@ public class GradeDBContext extends DBContext<Grade> {
         }
         return false;
     }
-
-    public static void main(String[] args) {
-        GradeDBContext gdb = new GradeDBContext();
-        ArrayList<Grade> g = gdb.getGradeBySubidAndSidAndAtid(1, 1, 6);
-        System.out.println(g.get(0).getExam().getAssessment().getItem());
-        System.out.println(g.get(0).getExam().getAssessment().getWeight());
-        System.out.println(gdb.checkGradeNull(1));;
-
-    }
-
     @Override
     public ArrayList<Grade> list() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
