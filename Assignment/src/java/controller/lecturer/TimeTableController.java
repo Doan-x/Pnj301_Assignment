@@ -5,6 +5,7 @@
 package controller.lecturer;
 
 import controller.account.BaseRequiredAuthenticationController;
+import controller.authentication.authorization.BaseRBACController;
 import dal.LecturerDBContext;
 import dal.LessionDBContext;
 import dal.LoginDBContext;
@@ -21,6 +22,7 @@ import java.util.Date;
 import model.Account;
 import model.Lecturer;
 import model.Lession;
+import model.Role;
 import model.TimeSlot;
 import util.DateTimeHelper;
 
@@ -29,15 +31,15 @@ import util.DateTimeHelper;
  * @author Admin
  */
 @WebServlet(name = "TimeTableController", urlPatterns = {"/lecturer/timetable"})
-public class TimeTableController extends BaseRequiredAuthenticationController {
+public class TimeTableController extends BaseRBACController {
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp, Account account) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp, Account account, ArrayList<Role> roles) throws ServletException, IOException {
 
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp, Account account) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp, Account account, ArrayList<Role> roles) throws ServletException, IOException {
         SlotDBContext sdb = new SlotDBContext();
         ArrayList<TimeSlot> slots = sdb.list();
         String from_raw = req.getParameter("from");
@@ -45,12 +47,12 @@ public class TimeTableController extends BaseRequiredAuthenticationController {
         
         LessionDBContext ldb = new LessionDBContext();
         String lid_raw = req.getParameter("lid");
-        int lid =-1;
+        int lid;
         if(lid_raw == null || lid_raw.isEmpty()){
             LoginDBContext login = new LoginDBContext();
             lid = login.getLecturerByUserName(account.getUsername()).getLid();
         }else{
-            lid = Integer.parseInt(lid_raw);
+            lid = Integer.parseInt(lid_raw.trim());
         }
         java.sql.Date from = null;
         java.sql.Date to = null;
@@ -77,7 +79,7 @@ public class TimeTableController extends BaseRequiredAuthenticationController {
         
         // retrieve lecturer information
         LecturerDBContext lecturerDB = new LecturerDBContext();
-        Lecturer lecturer = lecturerDB.checkLid(lid);
+        Lecturer lecturer = lecturerDB.getLecturerByLid(lid);
         
         req.setAttribute("slots", slots);
         req.setAttribute("dates", dates);
@@ -85,13 +87,9 @@ public class TimeTableController extends BaseRequiredAuthenticationController {
         req.setAttribute("to", to);
         req.setAttribute("lession", les);
         req.setAttribute("account", account);
-        req.setAttribute("lid", lid);
+        req.setAttribute("lecturer", lecturer);
         req.getRequestDispatcher("../view/lecturer/timetable.jsp").forward(req, resp);
     }
-        public static void main(String[] args) {
-        LecturerDBContext l = new LecturerDBContext();
-        Lecturer lec = l.checkLid(1);
-        System.out.println(lec.getLid() + lec.getLname());
-    }
+
 
 }
