@@ -70,7 +70,7 @@ public class LessionDBContext extends DBContext<Lession> {
                     + "les.leid,les.isAttended,les.date,\n"
                     + "sg.gid,sg.gname,\n"
                     + "sub.subid,sub.suname,sub.credit,\n"
-                    + "ts.tid,ts.tname,\n"
+                    + "ts.tid,ts.tname,ts.time,\n"
                     + "r.rid,r.rname,\n"
                     + "lt.lid,lt.lname\n"
                     + "from lession les \n"
@@ -114,6 +114,7 @@ public class LessionDBContext extends DBContext<Lession> {
                 TimeSlot ts = new TimeSlot();
                 ts.setTid(rs.getInt("tid"));
                 ts.setTname(rs.getString("tname"));
+                ts.setTime(rs.getString("time"));
                 les.setSlot(ts);
 
                 lessions.add(les);
@@ -175,34 +176,33 @@ public class LessionDBContext extends DBContext<Lession> {
         return students;
     }
 
-    public void takeAttendances(int leid, ArrayList<Attendance> atts) {
+    public void takeAttendances(int leid,int sid, Attendance att) {
         try {
             connection.setAutoCommit(false);
-            String sql_remove_atts = "DELETE Attendence WHERE leid = ?";
-            PreparedStatement stm_remove_atts = connection.prepareStatement(sql_remove_atts);
-            stm_remove_atts.setInt(1, leid);
-            stm_remove_atts.executeUpdate();
+            String sql_remove_att = "DELETE Attendence WHERE leid = ? and sid = ?";
+            PreparedStatement stm_remove_att = connection.prepareStatement(sql_remove_att);
+            stm_remove_att.setInt(1, leid);
+            stm_remove_att.setInt(2, sid);
+            stm_remove_att.executeUpdate();
 
-            for (Attendance att : atts) {
-                String sql_insert_att = "INSERT INTO [Attendence]\n"
-                        + "           ([leid]\n"
-                        + "           ,[sid]\n"
-                        + "           ,[description]\n"
-                        + "           ,[isPresent]\n"
-                        + "           ,[capturedtime])\n"
-                        + "     VALUES\n"
-                        + "           (?\n"
-                        + "           ,?\n"
-                        + "           ,?\n"
-                        + "           ,?\n"
-                        + "           ,GETDATE())";
-                PreparedStatement stm_insert_att = connection.prepareStatement(sql_insert_att);
-                stm_insert_att.setInt(1, leid);
-                stm_insert_att.setInt(2, att.getStudent().getSid());
-                stm_insert_att.setString(3, att.getDescription());
-                stm_insert_att.setBoolean(4, att.isIsPresent());
-                stm_insert_att.executeUpdate();
-            }
+            String sql_insert_att = "INSERT INTO [Attendence]\n"
+                    + "           ([leid]\n"
+                    + "           ,[sid]\n"
+                    + "           ,[description]\n"
+                    + "           ,[isPresent]\n"
+                    + "           ,[capturedtime])\n"
+                    + "     VALUES\n"
+                    + "           (?\n"
+                    + "           ,?\n"
+                    + "           ,?\n"
+                    + "           ,?\n"
+                    + "           ,GETDATE())";
+            PreparedStatement stm_insert_att = connection.prepareStatement(sql_insert_att);
+            stm_insert_att.setInt(1, leid);
+            stm_insert_att.setInt(2, att.getStudent().getSid());
+            stm_insert_att.setString(3, att.getDescription());
+            stm_insert_att.setBoolean(4, att.isIsPresent());
+            stm_insert_att.executeUpdate();
 
             String sql_update_lession = "UPDATE Lession SET isAttended = 1 WHERE leid =?";
             PreparedStatement stm_update_lession = connection.prepareStatement(sql_update_lession);
@@ -233,7 +233,7 @@ public class LessionDBContext extends DBContext<Lession> {
                     + "       les.leid,les.isAttended,les.date,\n"
                     + "       sg.gid,sg.gname,\n"
                     + "       sub.subid,sub.suname,sub.credit,\n"
-                    + "       ts.tid,ts.tname,\n"
+                    + "       ts.tid,ts.tname,ts.time,\n"
                     + "       r.rid,r.rname,\n"
                     + "       lt.lid,lt.lname\n"
                     + "from student s inner join Enrollment e on s.sid = e.sid\n"
@@ -278,6 +278,7 @@ public class LessionDBContext extends DBContext<Lession> {
                 TimeSlot ts = new TimeSlot();
                 ts.setTid(rs.getInt("tid"));
                 ts.setTname(rs.getString("tname"));
+                ts.setTime(rs.getString("time"));
                 les.setSlot(ts);
 
                 lessions.add(les);
