@@ -31,7 +31,7 @@ public abstract class BaseRBACController extends BaseRequiredAuthenticationContr
     protected void doPost(HttpServletRequest req, HttpServletResponse resp, Account account) throws ServletException, IOException {
         ArrayList<Role> roles = getRoles(req, account);
         if (roles.size() < 1) {
-            resp.getWriter().println("Acces denied");
+            resp.getWriter().println("Don't have permission to access");
         } else {
             doPost(req, resp, account, roles);
         }
@@ -41,7 +41,7 @@ public abstract class BaseRBACController extends BaseRequiredAuthenticationContr
     protected void doGet(HttpServletRequest req, HttpServletResponse resp, Account account) throws ServletException, IOException {
         ArrayList<Role> roles = getRoles(req, account);
         if (roles.size() < 1) {
-            resp.getWriter().println("Acces denied");
+            resp.getWriter().println("Don't have permission to access");
         } else {
             doGet(req, resp, account, roles);
         }
