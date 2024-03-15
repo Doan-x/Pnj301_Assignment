@@ -13,10 +13,9 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Hello ${sessionScope.user.displayname}</h1>
+        <h1>Hello ${sessionScope.account.displayname}</h1>
+        <h2>${sessionScope.account.username}</h2>
         <a href="login">logout</a>,<br/>
-        <a href="lecturer/timetable">time</a>
-        <a href="student/grade?semid=4">time</a>
 
     </body>
 </html>
