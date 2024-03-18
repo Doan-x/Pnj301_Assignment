@@ -41,17 +41,10 @@ public class GradeController extends BaseRBACController {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp, Account account, ArrayList<Role> roles) throws ServletException, IOException {
+        
         String semid_raw = req.getParameter("semid");
         int semid = Integer.parseInt(semid_raw);
         SubjectDBContext subdb = new SubjectDBContext();
-
-        ArrayList<Semester> semesters = subdb.getSemester();
-        req.setAttribute("semesters", semesters);
-        // get subject
-        ArrayList<Subject> subjects = subdb.getSubjectBySemID(semid);
-        int subid;
-        String subid_raw = req.getParameter("subid");
-
         // get student
         String sid_raw = req.getParameter("sid");
         int sid = -1;
@@ -65,6 +58,13 @@ public class GradeController extends BaseRBACController {
         Student student = stdb.getStudentBySid(sid);
         req.setAttribute("student", student);
 
+        ArrayList<Semester> semesters = subdb.getSemester();
+        req.setAttribute("semesters", semesters);
+        // get subject
+        ArrayList<Subject> subjects = subdb.getSubjectBySemID(semid, sid);
+        int subid;
+        String subid_raw = req.getParameter("subid");
+
         if (subid_raw == null || subid_raw == "") {
             req.setAttribute("subjects", subjects);
             req.setAttribute("semid", semid);
@@ -77,16 +77,20 @@ public class GradeController extends BaseRBACController {
                 ArrayList<Grade> gr = gdb.getGradeBySubidAndSidAndAtid(subid, sid, as.getAtid());
                 as.setGrades(gr);
             }
-            ArrayList<Grade> listgrade = gdb.getGradeBySidAndSubID(sid, subid);
-            ManageCourseraTotal mct = new ManageCourseraTotal();
-            CourseraTotal courseratotal = mct.checkStatus(ass);
+            // Student must have inputed data in grade 
+            if (ass.get(0).getGrades().size()>0) {
+                ArrayList<Grade> listgrade = gdb.getGradeBySidAndSubID(sid, subid);
+                ManageCourseraTotal mct = new ManageCourseraTotal();
+                CourseraTotal courseratotal = mct.checkStatus(ass);
+                req.setAttribute("courseratotal", courseratotal);
+            }
 
-            req.setAttribute("courseratotal", courseratotal);
             req.setAttribute("ass", ass);
             req.setAttribute("subjects", subjects);
             req.setAttribute("semid", semid);
             req.setAttribute("subid", subid);
-
+            req.setAttribute("sid", sid);
+            
             req.getRequestDispatcher("../view/student/grade.jsp").forward(req, resp);
         }
     }

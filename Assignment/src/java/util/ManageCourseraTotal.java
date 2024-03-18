@@ -41,7 +41,7 @@ public class ManageCourseraTotal {
                 >= 0 && checkZeroMark(at)) {
             ct.setStatus(-1);
         } else if (avg >= 4 && avg
-                <= 10 ) {
+                <= 10 && checkZeroMark(at)) {
             ct.setStatus(1);
         }
         return ct;
@@ -50,16 +50,12 @@ public class ManageCourseraTotal {
     public boolean checkZeroMark(ArrayList<AssessmentType> assessmentType) {
         for (AssessmentType i : assessmentType) {
             if (i.getMarkTotal()<= 0) {
-                if (i.getAtname().endsWith("Resit".toUpperCase())){
+                if (i.getAtname().toUpperCase().endsWith("Resit".toUpperCase())){
                     return true;
                 }
                 return false;                
             }
         }
         return true;
-    }
-    public static void main(String[] args) {
-        CourseraTotal c = new CourseraTotal();
-        System.out.println(c.getStatus());
     }
 }

@@ -48,16 +48,18 @@ public class TimeTableStudentController extends BaseRBACController {
         java.sql.Date from = null;
         java.sql.Date to = null;
 
-        String sid_raw = req.getParameter("sid").trim();
+        String sid_raw = req.getParameter("sid");
         int sid = -1;
         if (sid_raw == null || sid_raw.isEmpty()) {
             LoginDBContext login = new LoginDBContext();
-            sid = login.getLecturerByUserName(account.getUsername()).getLid();
+            sid = login.getStudentByUserName(account.getUsername()).getSid();
         } else {
-            sid = Integer.parseInt(sid_raw);
+            sid = Integer.parseInt(sid_raw.trim());
         }
-
-        Date today = new Date();
+        resp.getWriter().println(roles.get(0).getName());
+        Date today = new Date();     
+        java.sql.Date currentday = DateTimeHelper.convertUtilDateToSqlDate(today);
+        req.setAttribute("current", currentday);
         if (from_raw == null || from_raw.isEmpty()) {
             from = DateTimeHelper.convertUtilDateToSqlDate(DateTimeHelper.addDaysToDate(DateTimeHelper.getWeekStart(today), 1));
         } else {
@@ -86,22 +88,11 @@ public class TimeTableStudentController extends BaseRBACController {
         req.setAttribute("from", from);
         req.setAttribute("to", to);
         req.setAttribute("lession", les);
+        req.setAttribute("roles",roles);
         req.setAttribute("student", student);
         req.setAttribute("account", account);
-        req.getRequestDispatcher("../view/student/stimetable.jsp").forward(req, resp);
+        req.getRequestDispatcher("../view/lecturer/timetable.jsp").forward(req, resp);
     }
 
-    public static void main(String[] args) {
-        LessionDBContext ldb = new LessionDBContext();
-        java.sql.Date from = null;
-        java.sql.Date to = null;
-        Date today = new Date();
-        from = DateTimeHelper.convertUtilDateToSqlDate(DateTimeHelper.addDaysToDate(
-                DateTimeHelper.getWeekStart(today), 1));
-        to = DateTimeHelper.convertUtilDateToSqlDate(
-                DateTimeHelper.addDaysToDate(DateTimeHelper.getWeekStart(today), 6));
-        ArrayList<Lession> les = ldb.getLessionBySid(1, from, to);
-        System.out.println(les.get(0).getLecturer().getLname());
-    }
 
 }

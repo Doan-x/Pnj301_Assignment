@@ -45,7 +45,7 @@ public class LogoutController extends BaseRBACController {
 
         resp.addCookie(c_pass);
         resp.addCookie(c_user);
-        resp.sendRedirect(req.getContextPath() + "/view/login.jsp");
+        resp.sendRedirect(req.getContextPath() + "/login");
     }
 
 }

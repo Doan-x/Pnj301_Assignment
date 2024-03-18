@@ -19,7 +19,6 @@
                 padding: 20px;
                 width: 100%;
                 margin: auto;
-
             }
 
             table {
@@ -31,7 +30,7 @@
             .main th {
                 padding: 5px;
                 text-align: left;
-                /*                border-top: 1px solid #dee2e6;*/
+                border-top: 1px solid #dee2e6;
             }
             .main td {
                 padding: 5px;
@@ -47,8 +46,6 @@
                 padding: 5px;
                 text-align: left;
             }
-
-
             h3 {
                 color: #6b90da;
             }
@@ -64,31 +61,11 @@
         </style>
     </head>
     <body>
-        <div class="container-head">
-            <div class="row">
-                <div class="col-md-8">
-                    <h1><span>FPT University Academic Portal</span></h1>                    
-                </div>
-                <div class="col-md-4">
-                    <table>
-                        <tbody><tr>
-                                <td colspan="2" class="auto-style1">
-                                    <strong>FAP mobile app (myFAP) is ready at</strong></td>
-                            </tr>
-                            <tr>
-                                <td><a href="https://apps.apple.com/app/id1527723314">
-                                        <img src="https://fap.fpt.edu.vn/images/app-store.png" 
-                                             style="width: 120px; height: 40px" alt="apple store"></a></td>
-                                <td><a href="https://play.google.com/store/apps/details?id=com.fuct">
-                                        <img src="https://fap.fpt.edu.vn/images/play-store.png" 
-                                             style="width: 120px; height: 40px" alt="google store"></a></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+        <div class="container">
+            <div class="head">
+                <%@include file="head.jsp" %>
             </div>
             <div class="row">
-
                 <div class="col-md-12">
                     <h2>Grade report for <span>${requestScope.student.sname}(${requestScope.student.sid})</span></h2>
                     <table >
@@ -113,12 +90,12 @@
                                                                     <tr>
                                                                         <td>
                                                                             <c:if test="${sem.id eq requestScope.semid}">
-                                                                                <a href="?semid=${sem.id}">
+                                                                                <a href="?semid=${sem.id}&sid=${requestScope.student.sid}}">
                                                                                     <p style="font-weight: bold;color: black;">${sem.name}</p>
                                                                                 </a>
                                                                             </c:if>
                                                                             <c:if test="${sem.id ne requestScope.semid}">
-                                                                                <a href="?semid=${sem.id}">${sem.name}</a>
+                                                                                <a href="?semid=${sem.id}&sid=${requestScope.student.sid}">${sem.name}</a>
                                                                             </c:if>
                                                                         </td>
                                                                     </tr>
@@ -135,12 +112,12 @@
                                                                     <tr>
                                                                         <td>
                                                                             <c:if test="${sub.subid eq requestScope.subid}">
-                                                                                <a href="?semid=${sub.semester.id}&subid=${sub.subid}">                                               
+                                                                                <a href="?semid=${sub.semester.id}&subid=${sub.subid}&sid=${requestScope.student.sid}">                                               
                                                                                     <p style="font-weight: bold;color: black;">${sub.subname}</p>
                                                                                 </a>
                                                                             </c:if>
                                                                             <c:if test="${sub.subid ne requestScope.subid}">
-                                                                                <a href="?semid=${sub.semester.id}&subid=${sub.subid}">${sub.subname}</a>  
+                                                                                <a href="?semid=${sub.semester.id}&subid=${sub.subid}&sid=${requestScope.student.sid}">${sub.subname}</a>  
                                                                             </c:if>
                                                                         </td>
                                                                     </tr>
@@ -210,7 +187,7 @@
                                                             <font color="Green">Passed</font>
                                                         </c:if>
                                                         <c:if test="${requestScope.courseratotal.status == 0}">
-                                                            <font >Studying</font>
+                                                            <font  color ="Green">Studying</font>
                                                         </c:if>
                                                         <c:if test="${requestScope.courseratotal.status == -1}">
                                                             <font color="red">NotPassed</font>

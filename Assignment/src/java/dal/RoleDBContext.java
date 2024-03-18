@@ -42,7 +42,11 @@ public class RoleDBContext extends DBContext<Role> {
         }
         return list;
     }
-
+    public static void main(String[] args) {
+        RoleDBContext rdb = new RoleDBContext();
+        ArrayList<Role> rs = rdb.getRoleByUsernameAndUrl("sonnt", "/student/timetable");
+        System.out.println(rs.get(0).getName());
+    }
     @Override
     public ArrayList<Role> list() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
