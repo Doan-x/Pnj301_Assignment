@@ -26,13 +26,16 @@ public class LessionDBContext extends DBContext<Lession> {
     public ArrayList<Attendance> getAttendanceByLesid(int leid) {
         ArrayList<Attendance> atts = new ArrayList<>();
         try {
-            String sql = "SELECT \n"
-                    + "s.sid,s.sname,\n"
-                    + "a.aid,a.description,a.isPresent,a.capturedtime\n"
-                    + "FROM Student s INNER JOIN Enrollment e ON s.sid = e.sid\n"
-                    + "						INNER JOIN StudentGroup g ON g.gid = e.gid\n"
-                    + "						INNER JOIN Lession les ON les.gid = g.gid\n"
-                    + "						LEFT JOIN Attendence a ON a.leid = les.leid AND a.sid = s.sid\n"
+            String sql = "SELECT  \n"
+                    + "                 s.sid,s.sname, s.avatar,\n"
+                    + "			g.gname,lec.lname,\n"
+                    + "                 a.aid,a.description,a.isPresent,a.capturedtime \n"
+                    + "                 FROM Student s INNER JOIN Enrollment e ON s.sid = e.sid \n"
+                    + "                 INNER JOIN StudentGroup g ON g.gid = e.gid\n"
+                    + "			inner join Subject sub on sub.subid=g.subid\n"
+                    + "                 INNER JOIN Lession les ON les.gid = g.gid \n"
+                    + "                 inner join Lecturer lec on lec.lid = les.lid"
+                    + "                 LEFT JOIN Attendence a ON a.leid = les.leid AND a.sid = s.sid "
                     + "WHERE les.leid = ?";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, leid);
@@ -43,11 +46,18 @@ public class LessionDBContext extends DBContext<Lession> {
                 Lession les = new Lession();
                 s.setSid(rs.getInt("sid"));
                 s.setSname(rs.getString("sname"));
+                s.setUrl(rs.getString("avatar"));
                 a.setStudent(s);
-
-                les.setId(leid);
+                
+                StudentGroup sg = new StudentGroup();
+                sg.setGname(rs.getString("gname"));
+                les.setGroup(sg);
+                
+                Lecturer lec = new Lecturer();
+                lec.setLname(rs.getString("lname"));                
+                les.setLecturer(lec);
                 a.setLession(les);
-
+                
                 a.setAid(rs.getInt("aid"));
                 if (a.getAid() != 0) {
                     a.setDescription(rs.getString("description"));
@@ -176,7 +186,7 @@ public class LessionDBContext extends DBContext<Lession> {
         return students;
     }
 
-    public void takeAttendances(int leid,int sid, Attendance att) {
+    public void takeAttendances(int leid, int sid, Attendance att) {
         try {
             connection.setAutoCommit(false);
             String sql_remove_att = "DELETE Attendence WHERE leid = ? and sid = ?";

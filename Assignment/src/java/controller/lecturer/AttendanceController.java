@@ -41,7 +41,7 @@ public class AttendanceController extends BaseRBACController {
         for (Attendance a : atts) {
             boolean flag = Boolean.parseBoolean(req.getParameter("present" + a.getStudent().getSid()));
             
-            if (a.isIsPresent() != flag) {
+            if (a.isIsPresent() != flag || a.getCapturedtime() == null) {
                 Attendance new_a = new Attendance();
                 new_a.setLession(lession);
                 new_a.setStudent(a.getStudent());
@@ -49,6 +49,7 @@ public class AttendanceController extends BaseRBACController {
                 new_a.setIsPresent(flag);
                 db.takeAttendances(lesid, a.getStudent().getSid(),new_a);
             }
+            
         }
         resp.sendRedirect("att?id=" + lesid);
     }

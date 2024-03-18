@@ -12,6 +12,16 @@ public class Student {
     private int sid;
     private String sname;
     private String username;
+    private String url;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+    
     public Student() {
     }
 
