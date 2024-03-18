@@ -57,6 +57,9 @@ public class TimeTableController extends BaseRBACController {
         java.sql.Date from = null;
         java.sql.Date to = null;
         Date today = new Date();
+        
+        java.sql.Date currentday = DateTimeHelper.convertUtilDateToSqlDate(today);
+        req.setAttribute("current", currentday);
         if (from_raw == null || from_raw.isEmpty()) {
             from = DateTimeHelper.convertUtilDateToSqlDate(DateTimeHelper.addDaysToDate(DateTimeHelper.getWeekStart(today), 1));
         } else {
