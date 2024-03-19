@@ -16,6 +16,10 @@
             a{
                 text-decoration: none;
             }
+            img{
+                width: 200px;
+                    height: 250px;
+            }
             
         </style>
     </head>
@@ -30,7 +34,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td><img src="image/${requestScope.student.url}" alt="alt"/></td></tr>
+                        <tr><td><img src="../image/${requestScope.student.url}" alt="alt"/></td></tr>
                         <tr>
                             <td><a href="timetable?sid=${requestScope.student.sid}">TimeTable</a> </td>
                         </tr>

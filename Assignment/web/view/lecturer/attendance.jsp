@@ -31,13 +31,20 @@
                 color: white;
             }
             td {
-                margin: 2px;
-                text-align: left;
+                text-align: center;
+                
+            }
+            tr{
+                border: 1px solid #dee2e6;
             }
             .input{
                 display: flex;
                 flex-wrap: wrap;
                 justify-content: space-between
+            }
+            img{
+                width: 100px;
+                height: 125px;
             }
         </style>
     </head>
@@ -71,9 +78,10 @@
                                         <td>${a.lession.group.gname}</td>
                                         <td>${a.student.sid}</td>
                                         <td>${a.student.sname}</td>
-                                        <td><img src="${pageContext.request.contextPath}/../image/1.jpeg" alt="alt"/>
+                                        <td><img src="../image/${a.student.url}" alt="alt"/>
                                         </td>
-                                        <td class="input">
+                                        <td >
+                                            <div class="input">
                                             <input type="radio" 
                                                    ${!a.isPresent?"checked=\"checked\"":""}
                                                    name="present${a.student.sid}" value="false" /> 
@@ -82,21 +90,26 @@
                                                    ${a.isPresent?"checked=\"checked\"":""}
                                                    name="present${a.student.sid}" value="true"/>
                                             <p style="color: green">Present</p>
+                                            </div>
                                         </td>
                                         <td>
                                             <input type="text" name="description${a.student.sid}" value="${a.description}"/>
                                         </td>
                                         <td>${a.lession.lecturer.lname}</td>
                                         <td>${a.capturedtime}</td>
-                                    </tr>    
+                                    </tr>
                                 </c:forEach>
                             </tbody>
                         </table>
-                        <input type="submit" value="Save"/>
+                        <c:if test="${requestScope.atts[0].lession.date eq requestScope.today}">     
+                            <input type="submit" value="Save"/>
+                        </c:if>   
                     </form>
-                                ${pageContext.request.contextPath}
                 </div>
             </div>
+        </div>
+        <div style="height: 250px">
+
         </div>
 
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>

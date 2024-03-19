@@ -83,6 +83,9 @@
                                 Lecturer ID:<input type="text" name="lid" value="${requestScope.lecturer.lid}">    
                             </c:if>
                         </c:forEach>
+                        <c:if test="${requestScope.student.sid != null}">
+                            <input type="hidden" name="sid" value="${param.sid}"/>
+                        </c:if>
                         From: <input type="date" name="from" value="${requestScope.from}">
                         To: <input type="date" name="to" value="${requestScope.to}"> 
                         <input type="submit" value="View" style="width: 55px">
@@ -116,30 +119,11 @@
                                                             <a href="#" target="_blank" style="background-color: #f0ad4e"><span>View Materials</span></a>
                                                             <br> at ${les.group.gname}
                                                             <c:forEach items="${sessionScope.roles}" var="role">
-                                                                <c:if test="${requestScope.current.after(les.date)}">
-
-                                                                    <a href="#">
-                                                                        <c:if test="${les.attended}">
-                                                                            <br>(<font color="Green">attended</font>)
-                                                                        </c:if>
-                                                                        <c:if test="${!les.attended}">
-                                                                            <br>(<font color="red">absent</font>)
-                                                                        </c:if>
-                                                                    </a> 
-
-                                                                </c:if>
-                                                                <c:if test="${requestScope.current.before(les.date)}">                                                                    
-                                                                    <a href="#">
-
-                                                                        <br>(<font color="red">Not yet</font>)
-                                                                    </a>                                                 
-                                                                </c:if>
-
-                                                                <c:if test="${les.date eq requestScope.current}">
+                                                                <c:if test="${!requestScope.current.after(les.date)}">                                                                    
                                                                     <c:if test="${role.id == 1 && les.lecturer.lid == sessionScope.lid}">                                                                  
                                                                         <a href="../lecturer/att?id=${les.id}">
                                                                             <c:if test="${les.attended}">
-                                                                                <br>(<font color="Green">attended</font>) Edit
+                                                                                <br>(<font color="Green">Attended</font>) Edit
                                                                             </c:if>
                                                                             <c:if test="${!les.attended}">
                                                                                 <br>(<font color="red">Not yet</font>) Take
@@ -155,9 +139,30 @@
                                                                                 <br>(<font color="red">Not yet</font>)
                                                                             </c:if>
                                                                         </a>
+                                                                    </c:if>                                                  
+                                                                </c:if>
+                                                                <c:if test="${requestScope.current.after(les.date)}">                                                                    
+                                                                    <c:if test="${role.id == 1 && les.lecturer.lid == sessionScope.lid}">                                                                  
+                                                                        <a href="../lecturer/att?id=${les.id}">
+                                                                            <c:if test="${les.attended}">
+                                                                                <br>(<font color="Green">attended</font>) Edit
+                                                                            </c:if>
+                                                                            <c:if test="${!les.attended}">
+                                                                                <br>(<font color="red">absent</font>) Take
+                                                                            </c:if>
+                                                                        </a>
                                                                     </c:if>
+                                                                    <c:if test="${role.id == 2 || les.lecturer.lid != sessionScope.lid}">                                                                  
+                                                                        <a href="#">
+                                                                            <c:if test="${les.attended}">
+                                                                                <br>(<font color="Green">attended</font>)
+                                                                            </c:if>
+                                                                            <c:if test="${!les.attended}">
+                                                                                <br>(<font color="red">Not yet</font>)
+                                                                            </c:if>
+                                                                        </a>
+                                                                    </c:if>                                                
                                                                 </c:if>                           
-
                                                             </c:forEach>
                                                             <br>
                                                             <span>${les.slot.time}</span><br><!-- comment -->

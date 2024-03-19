@@ -42,6 +42,7 @@ public class StudentDBContext extends DBContext<Student> {
             String sql = "SELECT [sid]\n"
                     + "      ,[sname]\n"
                     + "      ,[username]\n"
+                    +",avatar"
                     + "  FROM [dbo].[Student]\n"
                     + "  where sid = ?";
             PreparedStatement stm = connection.prepareStatement(sql);
@@ -51,6 +52,7 @@ public class StudentDBContext extends DBContext<Student> {
                 Student s = new Student();
                 s.setSid(sid);
                 s.setSname(rs.getString("sname"));
+                s.setUrl(rs.getString("avatar"));
                 return s;
             }
         } catch (SQLException ex) {

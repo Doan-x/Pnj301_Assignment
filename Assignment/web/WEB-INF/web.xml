@@ -2,10 +2,34 @@
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
     <servlet>
         <servlet-name>HomeController</servlet-name>
-        <servlet-class>controller.home.HomeController</servlet-class>
+        <servlet-class>controller.general_features.HomeController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchStudentController</servlet-name>
+        <servlet-class>controller.lecturer.SearchStudentController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>InformationController</servlet-name>
+        <servlet-class>controller.student.InformationController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GroupController</servlet-name>
+        <servlet-class>controller.general_features.GroupController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>HomeController</servlet-name>
         <url-pattern>/home</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchStudentController</servlet-name>
+        <url-pattern>/lecturer/search</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>InformationController</servlet-name>
+        <url-pattern>/student/infor</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GroupController</servlet-name>
+        <url-pattern>/group</url-pattern>
     </servlet-mapping>
 </web-app>

@@ -26,16 +26,18 @@ public class LessionDBContext extends DBContext<Lession> {
     public ArrayList<Attendance> getAttendanceByLesid(int leid) {
         ArrayList<Attendance> atts = new ArrayList<>();
         try {
-            String sql = "SELECT  \n"
-                    + "                 s.sid,s.sname, s.avatar,\n"
-                    + "			g.gname,lec.lname,\n"
-                    + "                 a.aid,a.description,a.isPresent,a.capturedtime \n"
-                    + "                 FROM Student s INNER JOIN Enrollment e ON s.sid = e.sid \n"
-                    + "                 INNER JOIN StudentGroup g ON g.gid = e.gid\n"
-                    + "			inner join Subject sub on sub.subid=g.subid\n"
-                    + "                 INNER JOIN Lession les ON les.gid = g.gid \n"
-                    + "                 inner join Lecturer lec on lec.lid = les.lid"
-                    + "                 LEFT JOIN Attendence a ON a.leid = les.leid AND a.sid = s.sid "
+            String sql = "SELECT\n"
+                    + "s.sid,s.sname, s.avatar, \n"
+                    + "g.gname,\n"
+                    + "lec.lid, lec.lname,\n"
+                    + "les.date,\n"
+                    + "a.aid,a.description,a.isPresent,a.capturedtime  \n"
+                    + "      FROM Student s INNER JOIN Enrollment e ON s.sid = e.sid  \n"
+                    + "                     INNER JOIN StudentGroup g ON g.gid = e.gid \n"
+                    + "                     inner join Subject sub on sub.subid=g.subid \n"
+                    + "                     INNER JOIN Lession les ON les.gid = g.gid  \n"
+                    + "                     inner join Lecturer lec on lec.lid = les.lid\n"
+                    + "                     LEFT JOIN Attendence a ON a.leid = les.leid AND a.sid = s.sid\n "
                     + "WHERE les.leid = ?";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, leid);
@@ -48,16 +50,18 @@ public class LessionDBContext extends DBContext<Lession> {
                 s.setSname(rs.getString("sname"));
                 s.setUrl(rs.getString("avatar"));
                 a.setStudent(s);
-                
+
                 StudentGroup sg = new StudentGroup();
                 sg.setGname(rs.getString("gname"));
                 les.setGroup(sg);
-                
+
                 Lecturer lec = new Lecturer();
-                lec.setLname(rs.getString("lname"));                
+                lec.setLname(rs.getString("lname"));
+                lec.setLid(rs.getInt("lid"));
                 les.setLecturer(lec);
+                les.setDate(rs.getDate("date"));
                 a.setLession(les);
-                
+
                 a.setAid(rs.getInt("aid"));
                 if (a.getAid() != 0) {
                     a.setDescription(rs.getString("description"));

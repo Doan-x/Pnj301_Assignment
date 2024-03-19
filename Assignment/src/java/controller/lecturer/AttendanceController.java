@@ -15,11 +15,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Date;
 import model.Account;
 import model.Attendance;
 import model.Lession;
 import model.Role;
 import model.Student;
+import util.DateTimeHelper;
 
 /**
  *
@@ -57,9 +59,13 @@ public class AttendanceController extends BaseRBACController {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp, Account account, ArrayList<Role> roles) throws ServletException, IOException {
         LessionDBContext les = new LessionDBContext();
+
         int leid = Integer.parseInt(req.getParameter("id"));
         ArrayList<Attendance> atts = les.getAttendanceByLesid(leid);
         req.setAttribute("atts", atts);
+        Date today_raw = new Date();
+        java.sql.Date today = DateTimeHelper.convertUtilDateToSqlDate(today_raw);
+        req.setAttribute("today", today);
         req.getRequestDispatcher("../view/lecturer/attendance.jsp").forward(req, resp);
     }
 
